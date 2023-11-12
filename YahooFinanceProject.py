@@ -166,25 +166,28 @@ def create_area_chart(stock_data):
     return fig
 
 # Function to create a line plot
-def create_line_plot(stock_data, selected_duration, selected_interval):
+def create_line_plot(stock_data, selected_duration, selected_interval, selected_stock):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['Close'], mode='lines', name='Stock Price'))
-    fig.update_layout(title=f"Stock Price Line Chart for {selected_stock}",
-                      xaxis_rangeslider_visible=False,
-                      xaxis=dict(rangeslider=dict(visible=False),
-                                 type='date',
-                                 rangebreaks=[dict(enabled=True)]
-                                ),
-                      xaxis_title="Date",
-                      yaxis_title="Price",
-                      showlegend=True
-                     )
+    fig.update_layout(
+        title=f"Stock Price Line Chart for {selected_stock} - {selected_interval} Interval",
+        xaxis_rangeslider_visible=False,
+        xaxis=dict(
+            rangeslider=dict(visible=False),
+            type='date',
+            rangebreaks=[dict(enabled=True)]
+        ),
+        xaxis_title="Date",
+        yaxis_title="Price",
+        showlegend=True
+    )
     fig.update_xaxes(type="date")
     fig.update_yaxes(automargin=True)
     return fig
 
+
 # Function to create a candlestick plot
-def create_candlestick_plot(stock_data, selected_duration, selected_interval):
+def create_candlestick_plot(stock_data, selected_duration, selected_interval, selected_stock):
     fig = go.Figure(data=[go.Candlestick(x=stock_data.index,
         open=stock_data['Open'],
         high=stock_data['High'],
@@ -210,7 +213,7 @@ def renderSummaryTab():
     # Radio button group for duration selection at the top of the chart
     selected_durationSummary = st.radio(
         "Select Chart Duration",
-        ["1M", "3M", "6M", "YTD", "1Y", "3Y", "5Y", "MAX"],
+        ["1MO", "3MO", "6MO", "YTD", "1Y", "3Y", "5Y", "MAX"],
         key="visibility",
         horizontal=True
     )
@@ -238,32 +241,32 @@ def renderSummaryTab():
 # Tab Chart
 #==============================================================================
 def renderChartTab():
-    # Radio button group for duration selection at the top of the chart
-    selected_durationChart = st.radio(
-        "Select Chart Duration",
-        ["1M", "3M", "6M", "YTD", "1Y", "3Y", "5Y", "MAX"],
-        key="visibilityDurationChart",
-        horizontal=True
-    )
-
     # Time interval selection
     selected_interval = st.radio(
         "Select Time Interval",
-        ["1D", "1W", "1M", "1Y"],
+        ["1D", "5D", "1WK", "1MO", "3MO"],
         key="visibilityIntervalChart",
-        horizontal=True,
-        index=2  # 1M selected by default
+        index=2,  # Set default to 1 week
+        horizontal=True
     )
-    
+
+    # Radio button group for duration selection at the top of the chart
+    selected_durationChart = st.radio(
+        "Select Chart Duration",
+        ["1MO", "3MO", "6MO", "YTD", "1Y", "3Y", "5Y", "MAX"],
+        key="visibilityDurationChart",
+        horizontal=True
+    )
+        
     if selected_stock:
         stock_data = fetch_stock_dataChart(selected_stock, start_date, end_date, selected_durationChart)
         #stock_data = fetch_stock_data(selected_stock, selected_durationChart)
         if stock_data is not None and not stock_data.empty:
             # Create and display the selected plot type
             if plot_type == "Line Plot":
-                stock_chart = create_line_plot(stock_data, selected_durationChart, selected_interval)
+                stock_chart = create_line_plot(stock_data, selected_durationChart, selected_interval, selected_stock)
             else:
-                stock_chart = create_candlestick_plot(stock_data, selected_durationChart, selected_interval)
+                stock_chart = create_candlestick_plot(stock_data, selected_durationChart, selected_interval, selected_stock)
 
             st.plotly_chart(stock_chart)
 
