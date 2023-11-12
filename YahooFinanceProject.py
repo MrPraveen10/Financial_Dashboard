@@ -121,14 +121,6 @@ if 'clicked' not in st.session_state:
 def click_button():
     st.session_state.clicked = True
 
-# Update button
-update_button = st.sidebar.button("Update", on_click=click_button)
-
-
-
-
-
-
 # Get the company information
 @st.cache_data
 def GetCompanyInfo(ticker):
