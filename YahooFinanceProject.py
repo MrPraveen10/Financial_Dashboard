@@ -108,11 +108,10 @@ class YFinance:
 
 
 # Create a Streamlit sidebar
-st.sidebar.title("Stock Information")
-
+st.sidebar.title("Stock Picker")
 ticker_list = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0]['Symbol']
 global ticker  # Set this variable as global, so the functions in all of the tabs can read it
-selected_stock = st.sidebar.selectbox("Ticker", ticker_list)
+selected_stock = st.sidebar.selectbox("", ticker_list)
 # Ticker auto-fill selection
 # selected_stock = st.sidebar.text_input("Enter stock symbol (e.g., AAPL):")
 
@@ -307,12 +306,12 @@ def estimate_var(simulation_results):
 
 
 
-st.title("Stock Data Viewer")
+st.title("Trade Insights Hub")
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Summary", "Chart", "Financials", "Monte Carlo simulation", "Your own analysis"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Summary", "Chart", "Financials", "Monte Carlo simulation", "Historical Dividends"])
 
 with tab1:
-    st.subheader("company profile")
+    st.subheader("Company profile")
 
     # st.write(GetCompanyInfo(selected_stock))
     companyProfile = GetCompanyInfo(selected_stock)
@@ -357,7 +356,7 @@ with tab1:
     st.subheader("Key Executives")
     st.dataframe(newTwo, hide_index=True, use_container_width=True)
 
-    st.subheader("company description")
+    st.subheader("Company description")
     # Show to stock image
     col1, col2, col3 = st.columns([1, 3, 1])
 
@@ -374,7 +373,7 @@ with tab1:
                     '</div><br>',
                     unsafe_allow_html=True)    
 
-    st.subheader("major shareholders")
+    st.subheader("Major shareholders")
    # Get major shareholders data for selected stock
     # major_holders = yf.Ticker(selected_stock).major_holders
 
@@ -507,7 +506,7 @@ with tab4:
 
     # Estimate and present VaR
     var_95 = estimate_var(simulation_results)
-    st.subheader(f"Value at Risk (VaR) at 95% Confidence Interval: ${var_95:.2f}")
+    st.text(f"Value at Risk (VaR) at 95% Confidence Interval: ${var_95:.2f}")
 
     # Display the original stock data
     st.subheader("Original Stock Data")
@@ -527,7 +526,7 @@ with tab5:
     varTicker = yf.Ticker('AAPL').history_metadata
 
     df_metadata = pd.DataFrame({
-        "Historical metadata": ["symbol", "currency", "exchangeName", "instrumentType", "exchangeTimezoneName", "firstTradeDate", "regularMarketTime", "regularMarketPrice", "chartPreviousClose", "previousClose"],
+        "Historical metadata": ["Symbol", "Currency", "Exchange Name", "Instrument Type", "Exchange Time zone Name", "First Trade Date", "Regular Market Time", "Regular Market Price", "Chart Previous Close", "Previous Close"],
         "Metadata value": [varTicker.get("symbol"), varTicker.get("currency"), varTicker.get("exchangeName"), varTicker.get("instrumentType"), varTicker.get("exchangeTimezoneName"), datetime.utcfromtimestamp(varTicker.get("firstTradeDate")), datetime.utcfromtimestamp(varTicker.get("regularMarketTime")), varTicker.get("regularMarketPrice"), varTicker.get("chartPreviousClose"), varTicker.get("previousClose")]
     })
 
