@@ -311,7 +311,7 @@ def estimate_var(simulation_results):
 
 st.title("Trade Insights Hub")
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Summary", "Chart", "Financials", "Monte Carlo simulation", "Historical Dividends"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Summary", "Chart", "Financials", "Monte Carlo simulation", "Dividends"])
 
 with tab1:
     st.subheader("Company profile")
@@ -529,8 +529,8 @@ with tab5:
     varTicker = yf.Ticker('AAPL').history_metadata
 
     df_metadata = pd.DataFrame({
-        "Historical metadata": ["Symbol", "Currency", "Exchange Name", "Instrument Type", "Exchange Time zone Name", "First Trade Date", "Regular Market Time", "Regular Market Price", "Chart Previous Close", "Previous Close"],
-        "Metadata value": [varTicker.get("symbol"), varTicker.get("currency"), varTicker.get("exchangeName"), varTicker.get("instrumentType"), varTicker.get("exchangeTimezoneName"), datetime.utcfromtimestamp(varTicker.get("firstTradeDate")), datetime.utcfromtimestamp(varTicker.get("regularMarketTime")), varTicker.get("regularMarketPrice"), varTicker.get("chartPreviousClose"), varTicker.get("previousClose")]
+        "Metadata": ["Symbol", "Currency", "Exchange Name", "Instrument Type", "Exchange Time zone Name", "First Trade Date", "Regular Market Time", "Regular Market Price", "Chart Previous Close", "Previous Close"],
+        "Value": [varTicker.get("symbol"), varTicker.get("currency"), varTicker.get("exchangeName"), varTicker.get("instrumentType"), varTicker.get("exchangeTimezoneName"), datetime.utcfromtimestamp(varTicker.get("firstTradeDate")), datetime.utcfromtimestamp(varTicker.get("regularMarketTime")), varTicker.get("regularMarketPrice"), varTicker.get("chartPreviousClose"), varTicker.get("previousClose")]
     })
 
     st.dataframe(df_metadata, hide_index=True, use_container_width=True)
